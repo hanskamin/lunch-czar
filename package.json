@@ -1,0 +1,22 @@
+{
+  "name": "lunch-czar",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.tsx",
+    "typecheck": "bunx tsc --noEmit",
+    "czar": "bash bin/lunch-czar"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.4.5",
+    "@opentui/react": "^0.4.5",
+    "react": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.19",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

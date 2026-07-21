@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Lunch Czar launcher — runs the terminal console with `caffeinate` so the
+# laptop can't sleep through the last-call timer or an armed auto-submit.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "✖  bun is not on PATH — install it from https://bun.sh first." >&2
+  exit 1
+fi
+
+if ! command -v dd-cli >/dev/null 2>&1; then
+  echo "⚠  dd-cli is not on PATH — install it and run 'dd-cli login' first."
+fi
+
+if [ ! -d node_modules ]; then
+  echo "⚒  Installing dependencies…"
+  bun install
+fi
+
+echo "♔  Lunch Czar reigns in this terminal  (Ctrl-C to abdicate)"
+if command -v caffeinate >/dev/null 2>&1; then
+  exec caffeinate -i bun src/index.tsx
+else
+  exec bun src/index.tsx
+fi
