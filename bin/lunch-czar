@@ -4,12 +4,36 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+fake_doordash=false
+for arg in "$@"; do
+  case "$arg" in
+    --fake)
+      fake_doordash=true
+      ;;
+    --help|-h)
+      echo "Usage: bun run czar [--fake]"
+      echo
+      echo "  --fake  Simulate DoorDash search, cart, payment, and order calls."
+      exit 0
+      ;;
+    *)
+      echo "✖  Unknown option: $arg" >&2
+      echo "Usage: bun run czar [--fake]" >&2
+      exit 2
+      ;;
+  esac
+done
+
 if ! command -v bun >/dev/null 2>&1; then
   echo "✖  bun is not on PATH — install it from https://bun.sh first." >&2
   exit 1
 fi
 
-if ! command -v dd-cli >/dev/null 2>&1; then
+if $fake_doordash; then
+  export DD_CLI_BIN="$PWD/bin/fake-dd-cli"
+  export LUNCH_CZAR_FAKE=1
+  echo "⚠  FAKE DOORDASH MODE — no real order will be placed; Slack remains live."
+elif ! command -v dd-cli >/dev/null 2>&1; then
   echo "⚠  dd-cli is not on PATH — install it and run 'dd-cli login' first."
 fi
 

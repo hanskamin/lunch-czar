@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Deterministic dd-cli stand-in for `bun run czar --fake`.
+# Slack is deliberately not mocked so the app's real messages can be tested.
+set -euo pipefail
+
+case " $* " in
+  *" address list "*)
+    printf '%s\n' '{"addresses":[{"is_default":true,"lat":30.2672,"lng":-97.7431,"printable_address":"Test Office"}]}'
+    ;;
+  *" search "*)
+    printf '%s\n' '{"stores":[{"store_id":"fake-store-1","name":"Fake Lunch Palace","average_rating":5,"description":"Test kitchen — no real order will be placed","eta_display":"10 min","delivery_fee_display":"$0"}]}'
+    ;;
+  *" cart list "*)
+    printf '%s\n' '{"carts":[{"cart_uuid":"fake-cart-1","store_id":"fake-store-1","store_name":"Fake Lunch Palace","items_count":2,"items":[{"name":"Imaginary Sandwich","quantity":2,"price":"$15.00"}]}]}'
+    ;;
+  *" order preview "*)
+    printf '%s\n' '{"quote":{"store_order_cart":{"orders":[{"order_items":[{"item":{"name":"Imaginary Sandwich"},"quantity":2,"unit_price_monetary_fields":{"display_string":"$30.00"}}]}]},"line_items":[{"label":"Subtotal","final_money":{"display_string":"$30.00"}},{"label":"Test fees","final_money":{"display_string":"$5.00"}}],"net_total_before_tip":{"display_string":"$35.00"},"delivery_address":{"printable_address":"TEST OFFICE — NOT A REAL DELIVERY"},"is_pre_tippable":true,"tips_suggestion_details":[{"default_index":0,"percentage_to_amount_monetary_values":[{"unit_amount":700}],"percentage_values":[20]}]}}'
+    ;;
+  *" payment-method list "*)
+    printf '%s\n' '{"default_payment_method_id":"fake-card","cards":[{"payment_method_id":"fake-card","brand":"TEST CARD","last4":"0000"}]}'
+    ;;
+  *" order submit "*)
+    printf '%s\n' '{"success":true,"order_uuid":"fake-order-1"}'
+    ;;
+  *" order status "*)
+    printf '%s\n' '{"status":"successful"}'
+    ;;
+  *" order checkout-url "*)
+    printf '%s\n' '{"checkout_url":"https://example.invalid/fake-checkout"}'
+    ;;
+  *)
+    printf '%s\n' '{"isError":true,"content":[{"type":"text","text":"Unsupported fake dd-cli command."}],"structuredContent":{"error":"Unsupported fake dd-cli command."}}'
+    exit 1
+    ;;
+esac

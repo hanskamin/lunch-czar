@@ -132,7 +132,11 @@ function Header({
         <strong>♔ LUNCH CZAR</strong>
       </text>
       <text>
-        <StatusLight ok={ddOk} label="DOORDASH" hint={ddOk === false ? "run `dd-cli login`" : undefined} />
+        <StatusLight
+          ok={ddOk}
+          label={process.env.LUNCH_CZAR_FAKE === "1" ? "DOORDASH FAKE" : "DOORDASH"}
+          hint={ddOk === false ? "run `dd-cli login`" : undefined}
+        />
         <span>  </span>
         <StatusLight
           ok={slackOk}

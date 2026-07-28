@@ -109,3 +109,23 @@ still has to stay awake and on the network.
 bun run start        # run the console
 bun run typecheck    # typecheck
 ```
+
+### Fake end-to-end run
+
+Run the normal app with every DoorDash call replaced by deterministic test
+data:
+
+```bash
+bun run czar --fake
+```
+
+This uses the normal `data/state.json` and real Slack settings from
+`.env.local`, but it cannot place or charge a real DoorDash order. The header
+shows `DOORDASH FAKE` for the entire run.
+
+Search for anything, choose **Fake Lunch Palace**, and use a harmless group
+order URL such as `https://example.invalid/group-order/test`. Set a deadline a
+minute or two ahead and arm auto-submit to exercise the announcement, automatic
+last call, fake submission, fake payment confirmation, and arrival message.
+Slack messages are live, including `@here`, so use a test channel when
+appropriate.
